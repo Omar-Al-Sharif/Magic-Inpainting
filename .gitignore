@@ -1,0 +1,7 @@
+# .gitignore
+
+# virtual env:
+cvipenv/
+
+.env
+.env.*
