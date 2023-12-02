@@ -4,6 +4,7 @@ import numpy as np
 from skimage.exposure import histogram
 from matplotlib.pyplot import bar
 from skimage.color import rgb2gray,rgb2hsv,rgba2rgb
+from skimage.measure import label
 
 # Convolution:
 from scipy.signal import convolve2d
@@ -11,7 +12,7 @@ from scipy import fftpack
 import math
 
 from skimage.util import random_noise
-from skimage.filters import median
+from skimage.filters import median , gaussian
 from skimage.feature import canny
 
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
@@ -21,8 +22,28 @@ from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 
+# Exposure
+from skimage.exposure import equalize_adapthist, equalize_hist
+
 # Edges
 from skimage.filters import sobel_h, sobel, sobel_v,roberts, prewitt
+
+#Morphology:
+from skimage.morphology import dilation, erosion, opening, closing,rectangle,isotropic_opening,isotropic_closing, binary_dilation, binary_erosion
+
+
+# Hough Transform
+from skimage.transform import hough_line, hough_line_peaks
+from skimage.draw import line as draw_line
+from skimage import data
+
+# OpenCv
+import imutils  
+import cv2
+
+
+from itertools import combinations
+
 
 # Show the figures / plots inside the notebook
 def show_images(images,titles=None):

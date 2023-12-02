@@ -65,3 +65,11 @@ If the mask selection would be a box on the object:
 •	Test your approach on various images with different backgrounds and lighting conditions.
 •	Fine-tune parameters based on the characteristics of your input images.
 
+
+
+
+
+Notes:
+Can do smoothing and noise removal as preprocessing
+Morphology is done after segmentation
+
