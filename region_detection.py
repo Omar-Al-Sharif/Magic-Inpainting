@@ -12,22 +12,23 @@ class RegionDetection:
         self.se_horizontal = rectangle(10,1)
         self.se_reg = np.ones((20, 20), np.uint8)
         self.coordinates=[]
-        self.result_image = None
-        self.region_mask = None
+        self.binary_mask= np.zeros((orig_img.shape))   # for the next module
+        self.region_mask = self.orig_img.copy()   # for the user
 
+    # Fn to find the difference between 2 images to return the rectangle drawn by the user
     def find_difference_between_original_and_selected(self):
-        
         diff = np.abs(self.gray_sel - self.gray_orig)
-        result = np.zeros(self.gray_sel)
+        result = np.zeros(self.gray_sel.shape)
         result[diff > 0.1] = 1
-        return self.gray_sel, self.gray_orig, result
+        return  result
     
-
+    # Applying morphology to the rectangle after the difference, to connect any disconnected lines
     def apply_morphology_to_image(self, diff_img):
         lines_vertical = binary_erosion(diff_img, footprint=self.se_vertical)
         lines_vertical = binary_dilation(lines_vertical, footprint=self.se_vertical)
         lines_vertical = binary_dilation(lines_vertical, footprint=self.se_vertical)
         lines_vertical = binary_dilation(lines_vertical, footprint=self.se_vertical)
+        lines_vertical = binary_dilation(lines_vertical, footprint=self.se_vertical)  #additional one
 
 
         lines_horizontal = binary_erosion(diff_img, footprint=self.se_horizontal)
@@ -42,6 +43,8 @@ class RegionDetection:
         lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)
         lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)
         lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)
+        lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)   # addiotional one
+        lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)   # addiotional one
         
         connected_lines = lines_vertical | lines_horizontal
         morph_img= connected_lines
@@ -49,11 +52,14 @@ class RegionDetection:
         return morph_img
     
 
+     # applying edge detection using Canny to detect the edges of the rectangle in the image, and apply hough transform later
     def apply_canny_edge_detection(self, morph_img):
         canny_img=canny(morph_img, sigma=1)
         return canny_img
 
 
+    # Applying hough transform to detect the vertical and horizontal lines of the rectangle after aplying edge detection
+    # It returns the coordinates of the 4 intersection points of the rectangle
     def apply_hough_transform(self, canny_image):
 
         # Classic straight-line Hough transform
@@ -88,6 +94,7 @@ class RegionDetection:
 
         # the vertical lines will have a theta of around 0 or around 180; the horizontal lines will have a theta of around 90.
         # Filter lines based on orientation
+        intersection_points = []
         vertical_lines = []
         horizontal_lines = []
 
@@ -113,7 +120,7 @@ class RegionDetection:
         return self.coordinates
 
 
-
+     # After knowing the coordinates of the rectangle, we extract a subimage using this coordinates and return it.
     def extract_subimage(self):
         #top_left , top_right, bottom_left, bottom_right= coordinates
         # y1=bottom_left[1]  #72
@@ -123,14 +130,24 @@ class RegionDetection:
         top_left, top_right, bottom_left, bottom_right = self.coordinates
         y1, y2 = bottom_left[1], bottom_right[1]
         x1, x2 = bottom_right[0], top_right[0]
-        subimage = self.orig_img[y1:y2, x1:x2]
+        print(y1,y2)
+        print(x1,x2)
+        if(y1>y2 and x1>x2):
+            subimage = self.orig_img[y2:y1, x2:x1]
+        elif (y2>y1 and x2>x1):
+            subimage = self.orig_img[y1:y2, x1:x2]
+        elif(y1>y2 and x2>x1):
+            subimage = self.orig_img[y2:y1, x1:x2]
+        elif (y2>y1 and x1>x2):
+             subimage = self.orig_img[y1:y2, x2:x1]
         #subimage = our_img[ y1:y2 , x1:x2]
         return subimage
     
     
  
             
-
+    # Applying region growing segmentation based on a seed pixel and seed color 
+    # Returning the binary mask as well as the result mask on the original image on size (256,256,3)
     def apply_region_growing(self, subimage):
         #seed_pixel_x, seed_pixel_y, seed_color
 
@@ -183,21 +200,31 @@ class RegionDetection:
         morh_reg= closing(morh_reg,self.se_reg)
         morh_reg= closing(morh_reg,self.se_reg)
 
-        # Create a copy of the original image
-        self.result_image = self.orig_img.copy()
-
         top_left, top_right, bottom_left, bottom_right = self.coordinates
         y1, y2 = bottom_left[1], bottom_right[1]
         x1, x2 = bottom_right[0], top_right[0]
 
         # Update the pixels in the copy based on the region mask
-        self.result_image[y1:y2, x1:x2][morh_reg > 0] = [255, 0, 0]  # Set pixels in the region to red
+        if(y1>y2 and x1>x2):
+            self.binary_mask[y2:y1, x2:x1][morh_reg > 0] = 1
+            self.region_mask[y2:y1, x2:x1][morh_reg > 0] = [255, 0, 0]  # Set pixels in the region to red
+        elif (y2>y1 and x2>x1):
+            self.binary_mask[y1:y2, x1:x2][morh_reg > 0] = 1
+            self.region_mask[y1:y2, x1:x2][morh_reg > 0] = [255, 0, 0]  # Set pixels in the region to red
+        elif(y1>y2 and x2>x1):
+            self.binary_mask[y2:y1, x1:x2][morh_reg > 0] = 1
+            self.region_mask[y2:y1, x1:x2][morh_reg > 0] = [255, 0, 0]  # Set pixels in the region to red
+        elif (y2>y1 and x1>x2):
+             self.binary_mask[y1:y2, x2:x1][morh_reg > 0] = 1
+             self.region_mask[y1:y2, x2:x1][morh_reg > 0] = [255, 0, 0]  # Set pixels in the region to red
+             
+        
 
-        return self.result_image
+        return self.region_mask, self.binary_mask
 
 
     def display_results(self):
-        show_images(images=[self.orig_img, self.result_image, self.region_mask])
+        show_images(images=[self.orig_img, self.region_mask, self.binary_mask])
 
     
     def get_mask_by_region_detection(self):
@@ -206,20 +233,23 @@ class RegionDetection:
         canny=self.apply_canny_edge_detection(morph)
         self.apply_hough_transform(canny)
         sub_image=self.extract_subimage()
-        self.region_mask=self.apply_region_growing(sub_image)
+        self.apply_region_growing(sub_image)
         self.display_results()
-        return self.region_mask
+        return self.region_mask, self.binary_mask
+
+
+
+
+
 
 
 # Example usage:
 
+# 1. cow image:
+#--------------
 cow_select=io.imread('images-to-be-tested/cow_with_selection.png')
-garb_select=io.imread('images-to-be-tested/garbage_with_selection.png')
-
 cow_orig=io.imread('images-to-be-tested/cow.jpg')
-garb_orig=io.imread('images-to-be-tested/garbage.jpg')
 
-# Assuming 'cow_select' and 'cow_orig' are already defined
 target_img_size = (256, 256)
 
 cow_sel_resize = cv2.resize(cow_select, target_img_size)
@@ -227,8 +257,62 @@ cow_sel_conversion = rgba2rgb(cow_sel_resize)
 cow_resized_orig = cv2.resize(cow_orig, target_img_size)
 
 
-# Create an instance of the RegionDetection class
+# # Create an instance of the RegionDetection class
 region_detector = RegionDetection(cow_resized_orig, cow_sel_conversion)
-region_detector.get_mask_by_region_detection()
+region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+print(region_mask)
+print(binary_mask)
 
 
+
+# 2. Garbage-1 image:
+#--------------
+garb_select=io.imread('images-to-be-tested/garbage_with_selection.png')
+garb_orig=io.imread('images-to-be-tested/garbage.jpg')
+
+garb_sel_resize=cv2.resize(garb_select,target_img_size)
+garb_sel_conversion=rgba2rgb(garb_sel_resize)
+garb_resized_orig=cv2.resize(garb_orig,target_img_size)
+
+# Create an instance of the RegionDetection class
+region_detector = RegionDetection(garb_resized_orig, garb_sel_conversion)
+region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+print(region_mask)
+print(binary_mask)
+
+
+
+
+# 3. Garbage-2 image:
+#--------------
+
+garb2_sel=io.imread('images-to-be-tested/garb2_with_sel.png')
+garb2_orig=io.imread('images-to-be-tested/garb2.jpg')
+
+
+garb2_sel_resize=cv2.resize(garb2_sel,target_img_size)
+garb2_sel_conversion=rgba2rgb(garb2_sel_resize)
+garb2_resized_orig=cv2.resize(garb2_orig,target_img_size)
+
+
+region_detector = RegionDetection(garb2_resized_orig, garb2_sel_conversion)
+region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+print(region_mask)
+print(binary_mask)
+
+
+
+# 3. Man image:                                 GIVES AN ERROR DUE TO NO COORDINATES !!!!!
+#--------------
+
+man_sel=io.imread('images-to-be-tested/man_with_sel.png')
+man_orig=io.imread('images-to-be-tested/man.jpg')
+
+man_sel_resize=cv2.resize(man_sel,target_img_size)
+man_sel_conversion=rgba2rgb(man_sel_resize)
+man_resized_orig=cv2.resize(man_orig,target_img_size)
+
+# region_detector = RegionDetection(man_resized_orig, man_sel_conversion)
+# region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+# print(region_mask)
+# print(binary_mask)
