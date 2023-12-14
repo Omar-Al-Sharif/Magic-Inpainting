@@ -43,8 +43,7 @@ class RegionDetection:
         lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)
         lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)
         lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)
-        lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)   # addiotional one
-        lines_horizontal = binary_dilation(lines_horizontal, footprint=self.se_horizontal)   # addiotional one
+
         
         connected_lines = lines_vertical | lines_horizontal
         morph_img= connected_lines
@@ -258,8 +257,8 @@ cow_resized_orig = cv2.resize(cow_orig, target_img_size)
 
 
 # # Create an instance of the RegionDetection class
-region_detector = RegionDetection(cow_resized_orig, cow_sel_conversion)
-region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+region_detector_1 = RegionDetection(cow_resized_orig, cow_sel_conversion)
+region_mask, binary_mask=region_detector_1.get_mask_by_region_detection()
 print(region_mask)
 print(binary_mask)
 
@@ -275,8 +274,8 @@ garb_sel_conversion=rgba2rgb(garb_sel_resize)
 garb_resized_orig=cv2.resize(garb_orig,target_img_size)
 
 # Create an instance of the RegionDetection class
-region_detector = RegionDetection(garb_resized_orig, garb_sel_conversion)
-region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+region_detector_2 = RegionDetection(garb_resized_orig, garb_sel_conversion)
+region_mask, binary_mask=region_detector_2.get_mask_by_region_detection()
 print(region_mask)
 print(binary_mask)
 
@@ -295,8 +294,8 @@ garb2_sel_conversion=rgba2rgb(garb2_sel_resize)
 garb2_resized_orig=cv2.resize(garb2_orig,target_img_size)
 
 
-region_detector = RegionDetection(garb2_resized_orig, garb2_sel_conversion)
-region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+region_detector_3 = RegionDetection(garb2_resized_orig, garb2_sel_conversion)
+region_mask, binary_mask=region_detector_3.get_mask_by_region_detection()
 print(region_mask)
 print(binary_mask)
 
@@ -312,7 +311,7 @@ man_sel_resize=cv2.resize(man_sel,target_img_size)
 man_sel_conversion=rgba2rgb(man_sel_resize)
 man_resized_orig=cv2.resize(man_orig,target_img_size)
 
-# region_detector = RegionDetection(man_resized_orig, man_sel_conversion)
-# region_mask, binary_mask=region_detector.get_mask_by_region_detection()
+# region_detector_4 = RegionDetection(man_resized_orig, man_sel_conversion)
+# region_mask, binary_mask=region_detector_4.get_mask_by_region_detection()
 # print(region_mask)
 # print(binary_mask)
