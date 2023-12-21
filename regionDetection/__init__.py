@@ -1,1 +1,0 @@
-print("Initializing region detection package")
