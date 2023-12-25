@@ -12,3 +12,31 @@ This repository contains the implementation of an advanced Image Inpainting and 
 - **Interactive Selection:** Allows users to interactively select objects for removal using masks.
 - **Real-Time Inpainting:** Supports real-time inpainting for video content.
 
+## Try it out!
+
+### To Get Started
+#### Prerequisites
+- Python
+- Docker
+- Docker Compose
+
+Running Locally<br>
+
+#### Clone the repository:
+```bash
+git https://github.com/Omar-Al-Sharif/Magic-Inpainting.git
+```
+#### Navigate to the project directory:
+
+```bash
+cd Magic-Inpainting/web
+```
+#### Build and run the Docker container:
+
+```bash
+docker build -t magicinpainting . 
+docker run -p 5000:5000 magicinpainting  
+```
+
+Access the application in your browser at http://localhost:5000.
+
