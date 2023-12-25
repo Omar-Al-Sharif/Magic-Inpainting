@@ -18,7 +18,6 @@ This repository contains the implementation of an advanced Image Inpainting and 
 #### Prerequisites
 - Python
 - Docker
-- Docker Compose
 
 Running Locally<br>
 
