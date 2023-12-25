@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block head %}
+    <!-- CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+{% endblock head %}
+{% block content %}
+
+    <div class="container-drawing">
+        pick a color:
+        <input type="color" id="colorPicker" value="#000000">
+        <button id="draw" class="btn btn-secondary">Free Drawing</button>
+        <button id="rectangle" class="btn btn-secondary">Add Rectangle</button>
+        <!-- <button id="circle" class="btn btn-secondary">Add Circle</button>
+        <button id="text" class="btn btn-secondary">Add Text</button> -->
+        <button id="remove" disabled="disabled" class="btn btn-secondary">Erase drawing</button>
+        <button id="test" class="btn btn-secondary">Test removal of object</button>
+        <button id="download" class="btn btn-secondary">Download Image</button>
+        <br><br>
+        <div class="row">
+            <div class="col-md-6">
+                <div><canvas id="canvas"></canvas></div>
+            </div>
+            <div class="col-md-6">
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const imagePath = "{{ url_for('static', filename=file_path) }}";
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="{{ url_for('static', filename='js/paint.js') }}"></script>
+
+{% endblock content %}

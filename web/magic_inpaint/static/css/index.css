@@ -1,0 +1,90 @@
+section.hero {
+    padding: 40px 0;
+    margin-bottom: 30px; 
+}
+
+section.hero .text {
+    font-size: 30px;
+    line-height: 73px;
+    color: var(--black);
+}
+
+.buttons {
+    padding-top: 69px;
+}
+
+.buttons .btn {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+}
+
+section.features {
+    padding: 200px 0;
+}
+
+section.features .text-header h3 {
+    font-size: 30px;
+    line-height: 48px;
+    color: var(--black);
+}
+
+section.features .text-header p {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+    color: var(--black-light);
+    padding: 27px 0;
+}
+
+section.features .icons {
+    padding: 27px 0;
+}
+
+section.features .description h5 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    color: var(--black);
+    padding-bottom: 18px;
+}
+
+section.features .description p {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    color: var(--black-light);
+    max-width: 284px;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 1024px) {
+    section.hero .text {
+        font-size: 32px;
+        line-height: 48px;
+    }
+    section.features .text-header h3 {
+        font-size: 32px;
+        line-height: 48px;
+    }
+    section.hero img {
+        height: 80%;
+    }
+}
+
+@media (max-width: 600px) {
+    section.hero {
+        margin: 10px;
+    }
+    section.hero .text {
+        font-size: 28px;
+        line-height: 44px;
+    }
+    section.features .text-header h3 {
+        font-size: 28px;
+        line-height: 42px;
+    }
+    section.hero img {
+        display: none;
+    }
+}

@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block head %}
+    <!-- CSS file here -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock head %}
+{% block content %}
+    <body data-spy="scroll" data-target=".navbar" data-offset="50">
+    <section class="hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="text">
+                        Distraction-Free: <br>Effortlessly remove unwanted elements!
+                    </div>
+                    <div class="buttons">
+                        <a href="{{ url_for('upload')}}" class="btn btn-primary">Start Now</a>
+                        <a href="#features" class="btn btn-secondary ms-3" data-target="#features">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="/static/img/hero-image.png" alt="hero-img" style="width: auto; height: 200px;">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="features" class="features">
+        <div class="container">
+            <div class="text-header text-center">
+                <h3>Ready to transform your photo editing experience?</h3> 
+                <p>Start now and let your creativity flow!</p>
+            </div>
+            <div class="items text-center">
+                <div class="row">
+                    <div class="col-md-4 mx-auto">
+                        <div class="icons">
+                            <img src="/static/img/icon1.png" alt="icons" height="100px">
+                        </div>
+                        <div class="description">
+                            <h5>Easy Canvas Editor</h5>
+                            <p>
+                                Draw or color easily with our simple tools to select the desired object.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mx-auto">
+                        <div class="icons">
+                            <img src="/static/img/icon2.png" alt="icons" height="100px">
+                        </div>
+                        <div class="description">
+                            <h5>Multiple Options</h5>
+                            <p>
+                                You can just remove the object by drawing a simple rectangle or you can fill the object with the brushing tool.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

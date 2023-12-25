@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    {% block bootstrap_css %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    {% endblock %}
+    
+    <!-- My CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    <!-- For extandable css file-->
+    {% block head %}{% endblock %}
+
+    {% if title %}
+        <title>Text Hub - {{ title }}</title>
+    {% else %}
+        <title>Magic Inpainting</title>
+    {% endif %}
+    <link rel="shortcut icon" href="/static/img/favicon.svg" type="image/x-icon">
+</head>
+<body>
+    
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index')}}">
+        <img src="/static/img/logo.svg" alt="brand" height="30" class="d-inline-block align-text-top">
+      </a>
+      <div>
+        {% if request.path in ['/', '/index'] %}
+          <a href="{{ url_for('upload')}}" class="btn btn-outline-secondary shadow-sm d-sm d-block">Upload Image</a>
+        {% else %}
+          <a href="{{ url_for('index')}}" class="btn btn-outline-secondary shadow-sm d-sm d-block">Home</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <main role="main" class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}" style="margin-left: 2px; font-size: 12px; padding: 0px; line-height: 3; padding-left: 5px;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

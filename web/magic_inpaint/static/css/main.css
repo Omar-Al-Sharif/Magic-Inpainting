@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;1,400&family=Poppins:ital,wght@0,300;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Coiny&family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;1,400&family=Poppins:ital,wght@0,300;0,500;0,600;1,400&display=swap');
+
+:root {
+    --primary: #FB3313;
+    --primary-dark: #143c64;
+    --black: #010101;
+    --black-light: #4e4848;
+    --gray-1: #788190;
+    --gray-2: #d3d4db;
+    --white: #ffffff;
+    --body: #fefefe;
+}
+
+body {
+    font-family: 'Coiny', sans-serif;
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 73px;
+    color: var(--black);
+    position: relative;
+    z-index: 1; /* Ensure the text is above the background image */
+    background-image: url('/static/img/background.png'); /* Replace with your image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.btn {
+    border-radius: 8px;
+    color: var(--primary);
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-outline-secondary{
+    padding: 12px 20px;
+}
+
+.btn-primary{
+    border: 2px solid var(--primary);
+    background-color: var(--white);
+}
+
+.btn-primary:hover{
+    border: 2px solid var(--primary);
+    background-color: var(--primary);
+}
+
+.btn-secondary{
+    background-color: var(--gray-2);
+    color: var(--black);
+    border: 2px solid var(--gray-2);
+}
+
+.btn-secondary:hover{
+    background-color: var(--gray-1);
+    color: var(--white);
+    border: 2px solid var(--gray-1);
+}   
+
+.btn-outline-secondary{
+    border: 2px solid var(--gray-2);
+    color: var(--primary-dark);
+}
+
+.btn-outline-secondary:hover{
+    background-color: var(--gray-1);
+    border: 1px solid var(--gray-1);
+    color: var(--white);
+}
+
+.btn-outline-secondary:focus{
+    background-color: var(--gray-2);
+    border: 1px solid var(--gray-2);
+    color: var(--black);
+}
+
+.navbar .btn-outline-secondary {
+    border: 1px solid var(--gray-2);
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 10px 16px;
+}
+
+.navbar {
+    padding: 32px 0px;
+}
+
+.nav-link {
+    margin-left: 41px;
+    font-size: 16px;
+    color: var(--gray-1);
+}
+
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+    color: var(--black);
+}
