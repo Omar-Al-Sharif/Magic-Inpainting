@@ -1,4 +1,5 @@
 const canvas = new fabric.Canvas('canvas', {isDrawingMode: false});
+let lastSelectionMode = 'brush';
 
 const img = new Image();
 img.onload = function () {
@@ -37,9 +38,11 @@ canvas.freeDrawingBrush.width = 10;
 
 $('#draw').on('click', function () {
     canvas.isDrawingMode = !canvas.isDrawingMode;
+    lastSelectionMode = 'brush';
 });
 
 $('#rectangle').on('click', function () {
+    lastSelectionMode = 'rectangle';
     canvas.isDrawingMode = false;
     rectangle = new fabric.Rect({
         left: 40,
@@ -48,12 +51,13 @@ $('#rectangle').on('click', function () {
         height: 60,
         fill: 'transparent',
         stroke: fabricColor.toRgb(),
-        strokeWidth: 4,
+        strokeWidth: 2,
     });
     canvas.add(rectangle);
 });
 
 $('#circle').on('click', function () {
+    lastSelectionMode = 'circle';
     canvas.isDrawingMode = false;
     const circle = new fabric.Circle({
         left: 40,
@@ -67,6 +71,7 @@ $('#circle').on('click', function () {
 });
 
 $('#text').on('click', function () {
+    lastSelectionMode = 'text';
     canvas.isDrawingMode = false;
     const text = new fabric.IText('Text', {
         left: 40,
@@ -125,7 +130,8 @@ $('#test').on('click', function () {
         type: 'POST',
         url: '/process_image',
         data: {
-            image_data: dataURL
+            image_data: dataURL,
+            mode: lastSelectionMode
         },
         success: function(response) {
             console.log('Image sent successfully');
