@@ -1,0 +1,75 @@
+Region detection of selected object
+
+Given an image and a circle or highlight around the desired object to be later removed
+The object will have parts from the background
+We should be able to perfectly just detect the object and its region border and pixels
+Also later would need to search image for any reflection of that object or any shadows and detect their region border and pixels too
+
+
+PLAN-1:
+------
+
+part1:
+
+1. Edge detection (for rectangle)
+2. ROI using Hough Transform: extracting region of interest which is the rectangle surrounding the wanted object "using Hough transform to detect the rectangle"
+3. Region Splitting & Merging: we would have region/s for background and region/s for the wanted object that we want
+4. Border Tracing for perfect edge detection: detect the edges of the unwanted object region for perfect masking.
+Since: If region border is not known but regions have been defined, borders can be detected
+5. Morphological operations: if needed.
+6. Masking: Applying the red color as a mask of the unwanted object to be removed later.
+
+part2: 
+the reflections and shadows removal
+
+
+
+PLAN-2:
+------
+
+Steps:
+1. Edge Detection:
+•	Apply edge detection techniques to find boundaries in the image.
+•	Common methods include the Sobel operator, Prewitt operator, or Canny edge detector.
+
+If the mask selection would be an edge surrounding the object:
+-	Mask Refinement: Even with interactive selection, the provided mask might not be perfect. You can use morphological operations or smoothing techniques to refine the user-provided mask and ensure a smoother boundary.
+-	Handling noise input: edge detection could be useful for cleaning up the mask. We can use edge information to identify and eliminate small artifacts or irregularities in the mask.
+-	Integration with segmentation: edge information can also be useful as an additional cue for segmentation techniques to separate the object from the background. For instance, might use edges to guide or refine the segmentation process within the user defined region.
+
+If the mask selection would be a box on the object:
+-	Edge detection might not be that important here. But Edge detection could still be useful for cleaning up the mask if the user's input introduces noise or irregularities
+
+2. Segmentation:
+•	Apply segmentation techniques to separate the highlighted object from the background.
+•	Region-based segmentation or thresholding methods can be considered.
+•	This will help isolate the object based on intensity or color differences.
+
+3. Morphological Operations:
+•	Utilize morphological operations (e.g., dilation, erosion) to refine the detected object boundaries.
+•	This step can help fill gaps, smooth edges, or remove noise in the segmented region.
+
+4. Shadow/Reflection Detection:
+•	To identify shadows or reflections, you can use intensity differences.
+•	Define criteria to identify areas with significant intensity changes in the image.
+•	Additional processing may be needed to distinguish between shadows/reflections and the actual object
+
+5. Connected Component Analysis:
+•	Perform connected component analysis on the segmented image to identify individual regions.
+•	This can help in distinguishing the main object from potential shadows or reflections.
+
+6. Region Borders and Pixels:
+•	Extract the region borders and pixel information of the detected object and its associated shadows/reflections.
+
+7. Testing and Refinement:
+•	Test your approach on various images with different backgrounds and lighting conditions.
+•	Fine-tune parameters based on the characteristics of your input images.
+
+
+
+
+
+Notes:
+Can do smoothing and noise removal as preprocessing
+Morphology is done after segmentation
+
