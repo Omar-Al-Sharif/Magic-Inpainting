@@ -44,7 +44,6 @@ import cv2
 
 
 from itertools import combinations
-# input are orig_img and selected img after resizing********** 
 
 class RegionDetection:
     def __init__(self, orig_img, selected_img):
@@ -139,10 +138,6 @@ class RegionDetection:
             for h_line in horizontal_lines:
                 intersection_points.append((v_line[0], h_line[1]))
 
-        # plt.tight_layout()
-        # plt.show()
-        # print(intersection_points)
-
         self.coordinates = [(int(x), int(y)) for x, y in intersection_points]
 
         return self.coordinates
@@ -150,16 +145,9 @@ class RegionDetection:
 
      # After knowing the coordinates of the rectangle, we extract a subimage using this coordinates and return it.
     def extract_subimage(self):
-        #top_left , top_right, bottom_left, bottom_right= coordinates
-        # y1=bottom_left[1]  #72
-        # y2=bottom_right[1] #216
-        # x1=bottom_right[0] #51
-        # x2=top_right[0]  #221
         top_left, top_right, bottom_left, bottom_right = self.coordinates
         y1, y2 = bottom_left[1], bottom_right[1]
         x1, x2 = bottom_right[0], top_right[0]
-        # print(y1,y2)
-        # print(x1,x2)
         if(y1>y2 and x1>x2):
             subimage = self.orig_img[y2:y1, x2:x1]
         elif (y2>y1 and x2>x1):
@@ -168,7 +156,6 @@ class RegionDetection:
             subimage = self.orig_img[y2:y1, x1:x2]
         elif (y2>y1 and x1>x2):
              subimage = self.orig_img[y1:y2, x2:x1]
-        #subimage = our_img[ y1:y2 , x1:x2]
         return subimage
     
     
@@ -275,87 +262,6 @@ class RegionDetection:
         return self.region_mask, self.binary_mask
 
 
-
-
-
-
-
-# # Example usage:
-
-# # 1. cow image:
-# #--------------
-# cow_select=io.imread('images-to-be-tested/cow_with_selection.png')
-# cow_orig=io.imread('images-to-be-tested/cow.jpg')
-
-# target_img_size = (256, 256)
-
-# cow_sel_resize = cv2.resize(cow_select, target_img_size)
-# cow_sel_conversion = rgba2rgb(cow_sel_resize)
-# cow_resized_orig = cv2.resize(cow_orig, target_img_size)
-
-
-# # # Create an instance of the RegionDetection class
-# region_detector_1 = RegionDetection(cow_resized_orig, cow_sel_conversion)
-# region_mask, binary_mask=region_detector_1.get_mask_by_region_detection()
-# # print(region_mask)
-# # print(binary_mask)
-
-
-
-# # 2. Garbage-1 image:
-# #--------------
-# garb_select=io.imread('images-to-be-tested/garbage_with_selection.png')
-# garb_orig=io.imread('images-to-be-tested/garbage.jpg')
-
-# garb_sel_resize=cv2.resize(garb_select,target_img_size)
-# garb_sel_conversion=rgba2rgb(garb_sel_resize)
-# garb_resized_orig=cv2.resize(garb_orig,target_img_size)
-
-# # Create an instance of the RegionDetection class
-# region_detector_2 = RegionDetection(garb_resized_orig, garb_sel_conversion)
-# region_mask, binary_mask=region_detector_2.get_mask_by_region_detection()
-# # print(region_mask)
-# # print(binary_mask)
-
-
-
-
-# # 3. Garbage-2 image:
-# #--------------
-
-# garb2_sel=io.imread('images-to-be-tested/garb2_with_sel.png')
-# garb2_orig=io.imread('images-to-be-tested/garb2.jpg')
-
-
-# garb2_sel_resize=cv2.resize(garb2_sel,target_img_size)
-# garb2_sel_conversion=rgba2rgb(garb2_sel_resize)
-# garb2_resized_orig=cv2.resize(garb2_orig,target_img_size)
-
-
-# region_detector_3 = RegionDetection(garb2_resized_orig, garb2_sel_conversion)
-# region_mask, binary_mask=region_detector_3.get_mask_by_region_detection()
-# # print(region_mask)
-# # print(binary_mask)
-
-
-
-# # 3. Man image:                                 GIVES AN ERROR DUE TO NO COORDINATES !!!!!
-# #--------------
-
-# man_sel=io.imread('images-to-be-tested/man_with_sel.png')
-# man_orig=io.imread('images-to-be-tested/man.jpg')
-
-# man_sel_resize=cv2.resize(man_sel,target_img_size)
-# man_sel_conversion=rgba2rgb(man_sel_resize)
-# man_resized_orig=cv2.resize(man_orig,target_img_size)
-
-# # region_detector_4 = RegionDetection(man_resized_orig, man_sel_conversion)
-# # region_mask, binary_mask=region_detector_4.get_mask_by_region_detection()
-# # print(region_mask)
-# # print(binary_mask)
-    
-
-
 class BrushedRegionDetection:
     def __init__(self, img_orig, img_brushed):
         self.img_orig = img_orig
@@ -375,9 +281,9 @@ class BrushedRegionDetection:
         gray_image = rgb2gray(self.img_brushed[:, :, :3])
 
         # Define a threshold value based on your requirement (to be adjusted)
-        threshold_value = 0.1
+        threshold_value = 0
 
-        dark_mask = gray_image < threshold_value
+        dark_mask = gray_image <= threshold_value
 
         return dark_mask
 

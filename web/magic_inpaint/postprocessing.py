@@ -87,7 +87,7 @@ def smudge_mask_region(image, mask, width, intensity):
 def postprocessing(img, mask):
 
     smudge_width = 50
-    smudge_intensity = 0.5
+    smudge_intensity = 0.1
     filter_size = 3
 
     result_image_smoothed = apply_median_filter_rgb(img, mask, filter_size)

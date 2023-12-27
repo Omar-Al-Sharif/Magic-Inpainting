@@ -96,14 +96,14 @@ def process_image_brush():
     processed_image_conversion = processed_image_resized[:,:,:3]
     original_image_resized = cv2.resize(original_image[:,:,:3], target_img_size)
 
-    # # Create an instance of the RegionDetection class
-    # region_detector_1 = RegionDetection(original_image_resized, processed_image_conversion)
-    # region_mask, binary_mask_test = region_detector_1.get_mask_by_region_detection()
-
     original_image, dark_mask, cleaned_dark_mask= BrushedRegionDetection(original_image_resized, processed_image_conversion).get_desired_masks()
 
-    inpainted_image = main(original_image_resized,cleaned_dark_mask, overlap=50)
+    inpainted_image = main(original_image_resized,cleaned_dark_mask)
     result = postprocessing(inpainted_image, cleaned_dark_mask)
+
+    cleaned_dark_mask = np.array(cleaned_dark_mask, dtype=np.uint8) * 255
+    img = Image.fromarray(cleaned_dark_mask, mode='L')
+    img.save('mask.png')
 
     io.imsave('inpainted.png', inpainted_image)
     io.imsave('result.png', result)
@@ -124,3 +124,24 @@ def process_image_rectangle():
     processed_image_conversion = processed_image_resized[:,:,:3]
     original_image_resized = cv2.resize(original_image[:,:,:3], target_img_size)
 
+    region_detector_1 = RegionDetection(original_image_resized, processed_image_conversion)
+    region_mask, binary_mask_test=region_detector_1.get_mask_by_region_detection()
+    
+    binary_mask_test = binary_mask_test[:,:,0]
+    inpainted_image= main(original_image_resized,binary_mask_test)
+    result = postprocessing(inpainted_image, binary_mask_test)
+
+
+    binary_mask_test = np.array(binary_mask_test, dtype=np.uint8) * 255
+    img = Image.fromarray(binary_mask_test, mode='L')
+    img.save('mask.png')
+
+    io.imsave('inpainted.png', inpainted_image)
+    io.imsave('result.png', result)
+
+    result_image_file_name = 'result.png'
+
+    with open(result_image_file_name, 'rb') as image_file:
+        image_content = image_file.read()
+    
+    return image_content

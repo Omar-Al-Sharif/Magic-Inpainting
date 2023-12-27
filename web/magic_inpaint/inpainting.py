@@ -48,22 +48,14 @@ from itertools import combinations
 
 
 def MSD(target_patch, exemplar_patch, M_bar):
-    # if not np.isin(1,M_bar):
-    #     return float('inf')
     if np.sum(M_bar)==0:
         return float('inf')
     else:
-     msd=np.sum((M_bar*target_patch - M_bar*exemplar_patch)**2)/np.sum(M_bar)
-     return msd
-    # return msd
+        msd=np.sum((M_bar*target_patch - M_bar*exemplar_patch)**2)/np.sum(M_bar)
+        return msd
 
-    # msd=np.sum((M_bar*target_patch - M_bar*exemplar_patch)**2)
-
-    
 
 def SMD (target_patch, exemplar_patch, binary_mask, M_bar):
-    # if not np.isin(1,M_bar):
-    #     return float('inf')
     if np.sum(M_bar)==0:
         return float('inf')
     if np.sum(binary_mask)==0:
@@ -73,10 +65,6 @@ def SMD (target_patch, exemplar_patch, binary_mask, M_bar):
     smd= (target_existing_avg-exemplar_fill_avg)**2
     return smd 
 
-    # target_existing_avg= np.sum(M_bar * target_patch)
-    # exemplar_fill_avg = np.sum(binary_mask* exemplar_patch)
-    # smd= (target_existing_avg-exemplar_fill_avg)**2
-    # return smd 
 
 def findBestsubPatch(target_patch, exemplar_patches, binary_mask, M_bar):
     best_patch = exemplar_patches[len(exemplar_patches)-1]
@@ -84,7 +72,6 @@ def findBestsubPatch(target_patch, exemplar_patches, binary_mask, M_bar):
 
     for other_patch in exemplar_patches:
         current_error = MSD((rgb2gray(target_patch)*255).astype('uint8'), (rgb2gray(other_patch)*255).astype('uint8'), M_bar) + SMD((rgb2gray(target_patch)*255).astype('uint8'), (rgb2gray(other_patch)*255).astype('uint8'), binary_mask, M_bar)
-        # print(f"Current Error: {current_error}")
 
         if current_error < min_combined_error:
             best_patch = other_patch
@@ -102,11 +89,24 @@ def findBestFullPatch(target_patches, exemplar_patches,binary_mask_patches, M_ba
 
 
 def main(img,binary_mask, overlap=2):
-    patch_size = 50
+
+    white_pixels = np.sum(binary_mask == 1)
+    black_pixels = np.sum(binary_mask == 0)
+
+    ratio = white_pixels / (white_pixels + black_pixels)
+    if ratio < 0.15:
+        overlap = 64
+        patch_size =64
+    elif ratio >0.3:
+        overlap = 80
+        patch_size =80
+    else:
+        overlap = 32
+        patch_size =32
+
     img_in_patches= [img[i:i+patch_size,j:j+patch_size] for i in range(0,img.shape[0]-patch_size+1, overlap) for j in range(0,img.shape[1]-patch_size+1, overlap) ]
     full_binary_mask_patches = [binary_mask[i:i+patch_size,j:j+patch_size] for i in range(0,img.shape[0]-patch_size+1, overlap) for j in range(0,img.shape[1]-patch_size+1, overlap) ]
     #if the patch contains a single 1 then it's subset of the target patch so mark it with 1 in the bit map
-    # bit_map=[ 1 if np.isin(1,full_binary_mask_patches[i]) else 0 for i in range(len(full_binary_mask_patches))]
 
     target_indices=[]
     exemplar_indices=[]
@@ -126,21 +126,13 @@ def main(img,binary_mask, overlap=2):
             binary_mask_patches.append(full_binary_mask_patches[i])
             target_patches.append(img_in_patches[i])
             target_patch_counter+=1
-            # binary_mask_patches.append(binary_mask[start_row:start_row+patch_size])
 
         else:
             exemplar_indices.append((i, start_row, start_col))
             exemplar_patches.append(img_in_patches[i])
 
-
-    # M_bar_patches=[np.where((binary_mask_patches[i]==0)|(binary_mask_patches[i]==1), binary_mask_patches[i]^1, binary_mask_patches) for i in range(len(binary_mask_patches))]
     M_bar_patches=[1-binary_mask_patches[i] for i in range(len(binary_mask_patches))]
-    #TO-DO: call implemented functions
     new_target_patches=findBestFullPatch(target_patches,exemplar_patches,binary_mask_patches,M_bar_patches)
-    print(len(new_target_patches))
-    print(len(target_patches))
-    print("new_target_patches",new_target_patches[0])
-    print(new_target_patches[1])
 
     new_img= np.copy(img)
     for target_index, start_row, start_col in target_indices:
@@ -148,12 +140,3 @@ def main(img,binary_mask, overlap=2):
         new_img[start_row: start_row+patch_size, start_col:start_col+patch_size]=new_target_patches[target_index]
     
     return new_img
-
-    # list of tuples (i,start_row,start_col)
-    '''
-    for target_index, start_row, start_col in target_indices:
-        img[start_row:start_row+patch_size , start_col: start_col+patch_size]=cp_target_patches[target_index]
-        start_row = (i // (img.shape[0] // patch_size)) * patch_size
-        start_col = (i % (img.shape[1] // patch_size)) * patch_size
-    
-    '''
