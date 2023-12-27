@@ -76,14 +76,16 @@ def process_image():
             f.write(image_binary)
 
         if brushing_mode == 'brush':
-            processed_image = process_image_brush()
+            processed_image, mask_image, inpainted_image = process_image_brush()
         else:
-            processed_image = process_image_rectangle()
+            processed_image, mask_image, inpainted_image  = process_image_rectangle()
 
         # # Convert the processed image to base64 for sending back to the client
         processed_image_data = base64.b64encode(processed_image).decode('utf-8')
+        mask_image_data = base64.b64encode(mask_image).decode('utf-8')
+        inpainted_image_data = base64.b64encode(inpainted_image).decode('utf-8')
 
-        return jsonify({'status': 'success', 'processed_image_data': processed_image_data})
+        return jsonify({'status': 'success', 'processed_image_data': processed_image_data, 'mask_image_data': mask_image_data, 'inpainted_image_data': inpainted_image_data, 'processed_image_data': processed_image_data})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
     
@@ -109,11 +111,18 @@ def process_image_brush():
     io.imsave('result.png', result)
 
     result_image_file_name = 'result.png'
-
     with open(result_image_file_name, 'rb') as image_file:
         image_content = image_file.read()
+
+    mask_image_file_name = 'mask.png'
+    with open(mask_image_file_name, 'rb') as image_file:
+        mask_content = image_file.read()
+
+    inpainted_image_file_name = 'inpainted.png'
+    with open(inpainted_image_file_name, 'rb') as image_file:
+        inpainted_content = image_file.read()
     
-    return image_content
+    return image_content, mask_content, inpainted_content
 
 def process_image_rectangle():
 
@@ -140,8 +149,15 @@ def process_image_rectangle():
     io.imsave('result.png', result)
 
     result_image_file_name = 'result.png'
-
     with open(result_image_file_name, 'rb') as image_file:
         image_content = image_file.read()
+
+    mask_image_file_name = 'mask.png'
+    with open(mask_image_file_name, 'rb') as image_file:
+        mask_content = image_file.read()
+
+    inpainted_image_file_name = 'inpainted.png'
+    with open(inpainted_image_file_name, 'rb') as image_file:
+        inpainted_content = image_file.read()
     
-    return image_content
+    return image_content, mask_content, inpainted_content

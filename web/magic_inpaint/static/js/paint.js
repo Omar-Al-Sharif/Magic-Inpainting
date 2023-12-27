@@ -138,6 +138,13 @@ $('#test').on('click', function () {
 
             // Replace the content of the SVG div with the processed image
             $('#result').html('<img src="data:image/png;base64,' + response.processed_image_data + '" alt="Processed Image">');
+            $('#mask').html('<img src="data:image/png;base64,' + response.mask_image_data + '" alt="Mask Image">');
+            $('#inpainted').html('<img src="data:image/png;base64,' + response.inpainted_image_data + '" alt="Inpainted Image">');
+            $('#result1').html('<img src="data:image/png;base64,' + response.processed_image_data + '" alt="Processed Image">');
+            $('#resultdata').html('<p> Result</p>');
+            $('#maskdata').html('<p> Masked Image</p>');
+            $('#inpaintdata').html('<p> Image after inpainting </p>');
+            $('#smudgedata').html('<p> Image after smudging</p>');
         },
         error: function(error) {
             console.error('Error sending image: ', error);
