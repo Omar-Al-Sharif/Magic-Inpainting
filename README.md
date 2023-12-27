@@ -23,7 +23,7 @@ Running Locally<br>
 
 #### Clone the repository:
 ```bash
-git https://github.com/Omar-Al-Sharif/Magic-Inpainting.git
+git clone https://github.com/Omar-Al-Sharif/Magic-Inpainting.git
 ```
 #### Navigate to the project directory:
 
