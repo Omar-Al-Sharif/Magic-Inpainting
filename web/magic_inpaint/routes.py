@@ -1,4 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request, session, jsonify
+from PIL import Image
 from magic_inpaint import app
 from magic_inpaint.forms import UploadForm
 from werkzeug.utils import secure_filename
@@ -22,10 +23,29 @@ def upload():
     if form.validate_on_submit():
 
         uploaded_file = form.image.data
+
+        image = Image.open(uploaded_file)
+        new_size = (256, 256)
+        resized_image = image.resize(new_size)
+
         directory = os.path.join('magic_inpaint', 'static', 'img')
         file_path = os.path.join(directory, 'temp.png')
-        uploaded_file.save(file_path)
+        resized_image.save(file_path)
         session['file_path'] = f'/img/temp.png'
+
+
+        # Resize the image to 256x256
+        # Open the uploaded image using Pillow
+        image = Image.open(file_path)
+
+        # Resize the image to be 256x256 pixels
+        new_size = (256, 256)
+        resized_image = image.resize(new_size)
+
+        # Save the resized image
+        resized_file_path = os.path.join(directory, 'resized_temp.png')
+        resized_image.save(resized_file_path)
+
         return redirect(url_for('paint'))
 
     return render_template('upload.html', form=form)
@@ -96,4 +116,11 @@ def process_image_brush():
     return image_content
 
 def process_image_rectangle():
-    pass
+
+    processed_image = io.imread('selected_image.png')
+    original_image = io.imread('magic_inpaint/static/img/temp.png')
+    target_img_size = (256, 256)
+    processed_image_resized = cv2.resize(processed_image, target_img_size)
+    processed_image_conversion = processed_image_resized[:,:,:3]
+    original_image_resized = cv2.resize(original_image[:,:,:3], target_img_size)
+
