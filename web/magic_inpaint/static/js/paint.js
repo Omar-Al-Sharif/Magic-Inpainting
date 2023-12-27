@@ -145,6 +145,7 @@ $('#test').on('click', function () {
             $('#maskdata').html('<p> Masked Image</p>');
             $('#inpaintdata').html('<p> Image after inpainting </p>');
             $('#smudgedata').html('<p> Image after smudging</p>');
+            $('#note').html('<p>Or you can adjust your drawings for a better result</p>');
         },
         error: function(error) {
             console.error('Error sending image: ', error);

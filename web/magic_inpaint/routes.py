@@ -101,11 +101,12 @@ def process_image_brush():
     original_image, dark_mask, cleaned_dark_mask= BrushedRegionDetection(original_image_resized, processed_image_conversion).get_desired_masks()
 
     inpainted_image = main(original_image_resized,cleaned_dark_mask)
-    result = postprocessing(inpainted_image, cleaned_dark_mask)
 
-    cleaned_dark_mask = np.array(cleaned_dark_mask, dtype=np.uint8) * 255
-    img = Image.fromarray(cleaned_dark_mask, mode='L')
+    binary_mask_test = np.array(binary_mask_test, dtype=np.uint8) * 255
+    img = Image.fromarray(binary_mask_test, mode='L')
     img.save('mask.png')
+    
+    result = postprocessing(inpainted_image, cleaned_dark_mask)
 
     io.imsave('inpainted.png', inpainted_image)
     io.imsave('result.png', result)
@@ -138,12 +139,12 @@ def process_image_rectangle():
     
     binary_mask_test = binary_mask_test[:,:,0]
     inpainted_image= main(original_image_resized,binary_mask_test)
-    result = postprocessing(inpainted_image, binary_mask_test)
-
-
+    
     binary_mask_test = np.array(binary_mask_test, dtype=np.uint8) * 255
     img = Image.fromarray(binary_mask_test, mode='L')
     img.save('mask.png')
+    
+    result = postprocessing(inpainted_image, binary_mask_test)
 
     io.imsave('inpainted.png', inpainted_image)
     io.imsave('result.png', result)

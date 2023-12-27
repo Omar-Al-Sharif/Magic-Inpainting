@@ -24,3 +24,20 @@ legend {
     background-color: var(--white);
     font-size: 16px;
 }
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ddd;
+    padding: 10px; 
+  }
+
+
+canvas {
+    border: 1px solid #ccc; 
+  }
+
+#note {
+    color: red;
+}

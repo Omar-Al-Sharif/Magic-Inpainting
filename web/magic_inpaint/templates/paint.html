@@ -5,7 +5,7 @@
 {% endblock head %}
 {% block content %}
 
-    <div class="container-drawing">
+    <div class="container-drawing mx-auto text-center">
         pick a color:
         <input type="color" id="colorPicker" value="#000000">
         <button id="draw" class="btn btn-secondary">Free Drawing</button>
@@ -18,8 +18,10 @@
         <br><br>
         <div class="row mb-4">
             <div class="col-md-6">
-                <div>Updated Image</div>
-                <div><canvas id="canvas"></canvas></div>
+                <div>Draw on Image</div>
+                <div class="canvas-container">
+                    <canvas id="canvas"></canvas>
+                </div>
             </div>
             <div class="col-md-6">
                 <div id="resultdata"></div>
@@ -40,6 +42,7 @@
                 <div id="result1"></div>
             </div>
         </div>
+        <div id="note"></div>
     </div>
     <script>
         const imagePath = "{{ url_for('static', filename=file_path) }}";
