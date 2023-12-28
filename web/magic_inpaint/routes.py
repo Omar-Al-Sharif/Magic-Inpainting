@@ -102,8 +102,8 @@ def process_image_brush():
 
     inpainted_image = main(original_image_resized,cleaned_dark_mask)
 
-    binary_mask_test = np.array(binary_mask_test, dtype=np.uint8) * 255
-    img = Image.fromarray(binary_mask_test, mode='L')
+    cleaned_dark_mask = np.array(cleaned_dark_mask, dtype=np.uint8) * 255
+    img = Image.fromarray(cleaned_dark_mask, mode='L')
     img.save('mask.png')
     
     result = postprocessing(inpainted_image, cleaned_dark_mask)
